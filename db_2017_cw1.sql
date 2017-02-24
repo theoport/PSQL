@@ -10,15 +10,15 @@ FROM		person AS person_a
 --names where no row can be found with the same name and father
 -- Q2 returns (name)
 SELECT 	person.name	
-FROM 		person
+FROM	person
 WHERE NOT EXISTS
-(	SELECT	*
-	FROM 	person AS person_a JOIN
+( SELECT	*
+	FROM person AS person_a JOIN
 				person AS person_b
 				ON person_a.name=person_b.father
 				AND person_a.name=person.name)
 AND person.gender='M'
-ORDER BY	person.name
+ORDER BY person.name
 ;
 --Uses Except to check if list is empty after genders of a mothers children have been removed
 --If list is empty, mother has children of both gender
@@ -27,24 +27,24 @@ SELECT DISTINCT person_a.mother AS name
 FROM person AS person_a
 WHERE NOT EXISTS
 (	SELECT 	person.gender
-	FROM		person
+	FROM person
 	EXCEPT
-	SELECT	person.gender
-	FROM 		person
-	WHERE 	person.mother=person_a.mother)
+	SELECT person.gender
+	FROM person
+	WHERE person.mother=person_a.mother)
 ORDER BY person_a.mother;
 ;
 --Uses ALL to check that all other dob's lie above the one we are cosidering, which makes it the first-born
 -- Q4 returns (name,father,mother)
 SELECT name,father,mother	
-FROM 	person
+FROM person
 WHERE dob <ALL(	SELECT dob
 		FROM person AS person_a
 		WHERE name<>person.name
 		AND father=person.father
 		AND mother=person.mother)
-AND	mother IS NOT NULL
-AND	father IS NOT NULL
+AND mother IS NOT NULL
+AND father IS NOT NULL
 ORDER BY name
 ;
 -- Q5 returns (name,popularity)
@@ -101,11 +101,11 @@ SELECT	person_a.father AS father,
 		FROM 	person AS person_a 
 			JOIN person AS person_b
 		ON person_a.mother IS NOT NULL
-		AND	person_a.father IS NOT NULL
+		AND person_a.father IS NOT NULL
 		AND person_a.father=person_b.father
 		AND person_a.mother=person_b.mother
 		GROUP BY person_a.mother,person_a.father,person_b.name
-		ORDER BY 	father,mother,
+		ORDER BY father,mother,
 			COUNT(CASE WHEN (person_a.dob<=person_b.dob) 
 			THEN person_a.dob ELSE NULL END)	
 ;
